@@ -18,6 +18,7 @@ background = pygame.image.load("sprites/background.png")
 running = True
 movement_right = 0
 double_jump = False
+live = True
 
 # objects
 player = Player(screen_size[0] // 2 - int(os.environ.get('PLAYER_WIDTH')) // 2,
@@ -26,7 +27,8 @@ wall_width = int(os.environ.get('WALL_SIZE'))
 wall_generation = World()
 score = 0
 
-while running:
+
+while running and live:
     # draw the main environment
     screen.blit(background, (0, 0))
     pygame.draw.rect(screen, (0, 0, 0),
@@ -52,7 +54,7 @@ while running:
                 double_jump = True
             movement_right = 1
 
-    running = player.update(movement_right, wall_generation.rectangles)
+    live = player.update(movement_right, wall_generation.rectangles)
     if movement_right:
         if player.getX() <= 30 or player.getX() >= screen_size[0] - 30 - 22:
             movement_right = 0
