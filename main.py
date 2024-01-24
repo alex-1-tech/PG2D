@@ -1,7 +1,5 @@
 import os
-import sys
 from start_menu import startGame
-import pygame
 from dotenv import load_dotenv
 from player import Player
 from world_generation import World

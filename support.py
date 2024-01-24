@@ -1,4 +1,3 @@
-import sys
 from os import walk
 import pygame
 

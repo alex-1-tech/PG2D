@@ -1,8 +1,4 @@
 import pygame
-import sys
-import random
-import os
-
 
 class Button:
     # create Button class
