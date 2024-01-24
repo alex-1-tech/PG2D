@@ -35,7 +35,7 @@ font = pygame.font.Font(None, 40)
 restart_button = Button((0, 0, 0), 62, 150, 100, 30, 10, "Заново", (255, 0, 0))
 exit_button = Button((0, 0, 0), 62, 190, 100, 30, 10, "Выйти", (255, 0, 0))
 table = ScoreTable("results.db")
-
+results_text = createResult(table)
 
 while running:
     # draw the main environment
@@ -66,7 +66,7 @@ while running:
             if movement_right != 0:
                 double_jump = True
             movement_right = 1
-        if event.type == pygame.MOUSEBUTTONDOWN and game_status == "dead":
+        if event.type == pygame.MOUSEBUTTONDOWN and (game_status == "dead" or game_status == "win"):
             if restart_button.pressed(pygame.mouse.get_pos()):
                 game_status = "start"
                 player = Player(screen_size[0] // 2 - int(os.environ.get('PLAYER_WIDTH')) // 2,
@@ -84,8 +84,12 @@ while running:
         screen.blit(font.render(str(wall_generation.score), True, (0, 0, 0)), (100, 20))
         if not (is_win := player.update(movement_right, wall_generation.rectangles, wall_generation.isFinished())):
             game_status = "dead"
+            restart_button.changePos(62, 150)
+            exit_button.changePos(62, 190)
         if is_win == 2:
             game_status = "win"
+            restart_button.changePos(62, 210)
+            exit_button.changePos(62, 250)
             table.addScore(nickname=nickname, score=wall_generation.score)
             results_text = createResult(table)
         if movement_right:
@@ -94,14 +98,15 @@ while running:
                 double_jump = False
         wall_generation.draw(screen, player.getCollide())
         wall_generation.update()
+    if game_status == "win" or game_status == "dead":
+        restart_button.update(screen)
+        exit_button.update(screen)
     if game_status == "win":
         screen.blit(table_text, (60, 80))
         for t, text in enumerate(results_text):
-            screen.blit(text, (45, 100 + t * 20))
+            screen.blit(text, (45, 103 + t * 20))
     if game_status == "dead":
         screen.blit(dead_text, (62, 120))
-        restart_button.update(screen)
-        exit_button.update(screen)
     player.draw(screen)
     pygame.display.flip()
 
