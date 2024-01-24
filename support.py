@@ -3,7 +3,23 @@ from os import walk
 import pygame
 
 
-def import_sprite(path: str) -> list:
+def createResult(table):
+    font = pygame.font.Font(None, 24)
+    ans = []
+    results = table.getTopScores()
+    for number in range(5):
+        if number + 1 > len(results):
+            ans.append(
+                font.render(f"{number+1}: - -", True, (0, 0, 0))
+            )
+        else:
+            ans.append(
+                font.render(f"{number+1}:{results[number][0]} {results[number][1]}", True, (0, 0, 0))
+            )
+    return ans
+
+
+def importSprite(path: str) -> list:
     """
     :param path: the path to the directory with images
     :return: list images : pygame image
