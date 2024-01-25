@@ -1,6 +1,5 @@
 import sys
 from game_objects import *
-
 import pygame
 
 

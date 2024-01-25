@@ -1,5 +1,6 @@
 import sqlite3
 
+
 class ScoreTable:
     def __init__(self, db_name):
         self.conn = sqlite3.connect(db_name)

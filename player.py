@@ -45,7 +45,7 @@ class Player(pygame.sprite.Sprite):
         if is_finished:
             self._rect.y -= 3
             if self._rect.y < -40:
-                return 2
+                return 1
         # animation
         if not is_finished and self._rect.y > int(os.environ.get("HEIGHT")) - 80:
             self._rect.y -= 1

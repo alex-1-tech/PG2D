@@ -10,8 +10,8 @@ from database import ScoreTable
 
 # base
 load_dotenv('.env')
-screen_size = (int(os.environ.get('WIDTH')), int(os.environ.get('HEIGHT')))
 pygame.init()
+screen_size = (int(os.environ.get('WIDTH')), int(os.environ.get('HEIGHT')))
 screen = pygame.display.set_mode((screen_size[0], screen_size[1]))
 timer = pygame.time.Clock()
 
@@ -29,6 +29,7 @@ player = Player(screen_size[0] // 2 - int(os.environ.get('PLAYER_WIDTH')) // 2,
                 screen_size[1] - int(os.environ.get('PLAYER_HEIGHT')))
 wall_width = int(os.environ.get('WALL_SIZE'))
 wall_generation = World()
+
 font = pygame.font.Font(None, 40)
 restart_button = Button((0, 0, 0), 62, 150, 100, 30, 10, "Заново", (255, 0, 0))
 exit_button = Button((0, 0, 0), 62, 190, 100, 30, 10, "Выйти", (255, 0, 0))
@@ -53,6 +54,7 @@ while running:
                 and (event.key == pygame.K_LEFT or event.key == pygame.K_RIGHT):
             game_status = "duration"
 
+        # movement
         if not double_jump and player.getX() > 30 \
                 and event.type == pygame.KEYDOWN and event.key == pygame.K_LEFT:
             if movement_right != 0:
@@ -64,6 +66,8 @@ while running:
             if movement_right != 0:
                 double_jump = True
             movement_right = 1
+
+        # button
         if event.type == pygame.MOUSEBUTTONDOWN and (game_status == "dead" or game_status == "win"):
             if restart_button.pressed(pygame.mouse.get_pos()):
                 game_status = "start"
@@ -72,12 +76,15 @@ while running:
                 wall_generation = World()
             if exit_button.pressed(pygame.mouse.get_pos()):
                 running = False
+
+    # start game
     if game_status == "start":
         for t, text in enumerate(start_texts):
             screen.blit(text, ((int(os.environ.get("WIDTH")) - text.get_width()) / 2, 70 + 20 * t))
         screen.blit(left_arrow, (130, 190))
         screen.blit(right_arrow, (76, 190))
 
+    # process game
     if game_status == "duration":
         screen.blit(font.render(str(wall_generation.score), True, (0, 0, 0)), (100, 20))
         if not (is_win := player.update(movement_right, wall_generation.rectangles, wall_generation.isFinished())):
@@ -96,6 +103,8 @@ while running:
                 double_jump = False
         wall_generation.draw(screen, player.getCollide())
         wall_generation.update()
+
+    # win/dead
     if game_status == "win" or game_status == "dead":
         restart_button.update(screen)
         exit_button.update(screen)
@@ -105,6 +114,7 @@ while running:
             screen.blit(text, (45, 103 + t * 20))
     if game_status == "dead":
         screen.blit(dead_text, (62, 120))
+
     player.draw(screen)
     pygame.display.flip()
 
