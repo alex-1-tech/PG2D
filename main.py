@@ -91,6 +91,8 @@ while running:
         screen.blit(font.render(str(wall_generation.score), True, (0, 0, 0)), (100, 20))
         if not (is_win := player.update(movement_right, wall_generation.rectangles, wall_generation.isFinished())):
             game_status = "dead"
+            table.addScore(nickname=nickname, score=wall_generation.score)
+            results_text = createResult(table)
         if is_win == 2:
             game_status = "win"
             table.addScore(nickname=nickname, score=wall_generation.score)
